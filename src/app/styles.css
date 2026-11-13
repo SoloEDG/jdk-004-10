@@ -992,3 +992,340 @@ footer .mono {
     font-size: 24px;
   }
 }
+
+/* ===== 局外机库 / 材料 / 结算（v2） ===== */
+.materials-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid #4a5f52;
+  border-radius: 999px;
+  background: #14231f;
+  color: #e8d9a0;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+}
+.materials-pill b {
+  color: #f5d98a;
+}
+.header-materials {
+  margin-right: 18px;
+}
+.hangar-overlay {
+  z-index: 20;
+}
+.hangar-dialog {
+  position: relative;
+  border: 1px solid #354940;
+  border-radius: 10px;
+  background: #0f1a18;
+  padding: 28px;
+  width: min(1040px, 96vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  box-shadow: 0 30px 80px #000a;
+}
+.hangar-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 18px;
+}
+.hangar-head h2 {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 22px;
+  margin: 8px 0 0;
+}
+.hangar-head-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.hangar-lock-banner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  margin-bottom: 18px;
+  border: 1px solid #6b5a2e;
+  border-radius: 6px;
+  background: #241d10;
+  color: #e8d59a;
+  font-size: 11px;
+}
+.hangar-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, 1fr);
+  gap: 24px;
+}
+.hangar-col {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.hangar-preview {
+  background: #111d1b;
+  border: 1px solid #2a3b33;
+  border-radius: 8px;
+  padding: 18px;
+}
+.hangar-weapons,
+.hangar-mods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 10px;
+}
+.hangar-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-align: left;
+  padding: 13px;
+  border: 1px solid #34483f;
+  border-radius: 8px;
+  background: #13201d;
+  transition: border-color 0.15s, background 0.15s, transform 0.15s;
+}
+.hangar-card:hover:not(:disabled) {
+  border-color: #7fa892;
+  transform: translateY(-2px);
+}
+.hangar-card.selected {
+  border-color: #b1edbd;
+  background: #1d3329;
+  box-shadow: 0 0 0 1px #b1edbd55, 0 4px 22px #55be7b14;
+}
+.hangar-card.dimmed {
+  opacity: 0.45;
+}
+.hangar-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+.hangar-card-text strong {
+  font-size: 13px;
+}
+.hangar-card-text small {
+  font-size: 10px;
+  color: #8aa496;
+  line-height: 1.5;
+}
+.cost-tag {
+  font-size: 11px;
+  color: #e0c87e;
+  white-space: nowrap;
+}
+.check-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  width: 20px;
+  height: 20px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #b1edbd;
+  color: #17331f;
+}
+.mod-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.preview-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.preview-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 2px;
+  border-bottom: 1px solid #24352d;
+  font-size: 12px;
+  color: #a8beb0;
+}
+.preview-row > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.preview-row strong {
+  font-size: 14px;
+  color: #d7ede0;
+}
+.preview-row small {
+  font-size: 9px;
+  color: #6f8a7c;
+}
+.preview-row.warn {
+  color: #f0b77e;
+}
+.preview-row.warn strong {
+  color: #f0b77e;
+}
+.cost-summary {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #9db3a7;
+  padding: 8px 2px;
+}
+.cost-summary strong {
+  color: #f0da9a;
+  font-size: 14px;
+}
+.cost-summary .insufficient,
+.insufficient,
+.insufficient-hint {
+  color: #f0927e;
+}
+.insufficient-hint {
+  display: block;
+  font-size: 10px;
+  text-align: center;
+  margin-top: 8px;
+}
+.hangar-errors {
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  list-style: none;
+  border: 1px solid #7a4a3c;
+  border-radius: 6px;
+  background: #241613;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  color: #f0b7a6;
+}
+.hangar-errors li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.hangar-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 11px;
+  padding: 10px 12px;
+  border-radius: 6px;
+}
+.hangar-feedback.ok {
+  border: 1px solid #4a6f55;
+  background: #16281e;
+  color: #b7e5c6;
+}
+.hangar-feedback.fail {
+  border: 1px solid #7a4a3c;
+  background: #241613;
+  color: #f0b7a6;
+}
+.hangar-save {
+  width: 100%;
+  gap: 10px;
+  margin-top: 6px;
+}
+.hangar-cancel {
+  width: 100%;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  font-size: 11px;
+}
+.locked-loadout {
+  border: 1px solid #354940;
+  border-radius: 7px;
+  background: #101c19;
+  padding: 14px 16px;
+  margin: 0 auto 22px;
+  max-width: 420px;
+}
+.locked-loadout-row {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+  color: #b9d0c3;
+  margin: 8px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.locked-loadout > small {
+  font-size: 9px;
+  color: #6f8a7c;
+  line-height: 1.6;
+}
+.start-hangar {
+  padding: 10px 20px;
+  font-size: 11px;
+  margin: 0 auto;
+  gap: 8px;
+}
+.settlement-card {
+  border: 1px solid #4a5f52;
+  border-radius: 8px;
+  background: #14231f;
+  padding: 14px 16px;
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.settlement-line {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: #cfe3d8;
+}
+.settlement-line strong {
+  color: #f0da9a;
+  font-size: 16px;
+}
+.settlement-formula {
+  color: #7d998a;
+  font-size: 10px;
+  text-align: left;
+}
+.settlement-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+}
+.settlement-status.ok {
+  color: #b1edbd;
+}
+.settlement-status.fail {
+  color: #f0b77e;
+  flex-wrap: wrap;
+}
+.tiny-btn {
+  padding: 5px 10px;
+  font-size: 10px;
+  gap: 5px;
+  display: inline-flex;
+  align-items: center;
+}
+.history-row .materials-col {
+  color: #f0da9a;
+}
+@media (max-width: 900px) {
+  .hangar-body {
+    grid-template-columns: 1fr;
+  }
+  .header-materials {
+    display: none;
+  }
+}

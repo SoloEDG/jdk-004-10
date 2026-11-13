@@ -116,3 +116,40 @@ test("weapon damage includes nonlethal hits and ignores overkill", () => {
   assert.equal(d.stats.byWeapon.pulse, 20);
   assert.equal(d.stats.kills, 0);
 });
+test("hangar damage modifier scales outgoing weapon damage", () => {
+  const d = createRun({
+    loadout: { weapons: ["pulse"], modIds: ["overdrive-frame"] },
+  });
+  d.enemies = [enemy()];
+  stepArsenal(d, input, 1 / 60);
+  const bullet = d.bullets.find((b) => b.owner === "player");
+  assert.ok(bullet);
+  // 基础脉冲伤害 16 × 超载机架 1.2 = 19.2
+  assert.equal(bullet!.damage, 16 * 1.2);
+});
+test("hangar cooldown modifier changes weapon fire interval", () => {
+  const d = createRun({
+    loadout: { weapons: ["pulse"], modIds: ["cooling-core"] },
+  });
+  stepArsenal(d, input, 1 / 60);
+  const weapon = d.weapons[0];
+  // 散热核心射速 +15%，冷却间隔 0.48 × 0.85
+  assert.ok(Math.abs(weapon.cooldown - 0.48 * 0.85) < 1e-9);
+});
+test("hangar armor modifier reduces incoming damage", () => {
+  const d = createRun({
+    loadout: { weapons: ["pulse"], modIds: ["shield-core"] },
+  });
+  d.enemies = [{ ...enemy(), x: 500 }];
+  const taken = stepCombat(d, input, 0).taken;
+  // 接触伤害 12，护盾核心 1 级装甲减免 12%
+  assert.ok(Math.abs(taken - 12 * 0.88) < 1e-9);
+});
+test("locked loadout stats apply to the new run player body", () => {
+  const d = createRun({
+    loadout: { weapons: ["pulse"], modIds: ["reinforced-frame"] },
+  });
+  assert.equal(d.player.maxHp, 125);
+  assert.equal(d.player.hp, 125);
+  assert.equal(d.player.speed, Math.round(190 * 0.92));
+});

@@ -10,6 +10,8 @@ import {
   History,
   Volume2,
   VolumeX,
+  Wrench,
+  Coins,
 } from "lucide-react";
 import { useGame } from "./useGame";
 import { Battlefield, Vitals } from "../features/combat";
@@ -17,17 +19,25 @@ import { WavePanel } from "../features/waves";
 import { ArsenalPanel } from "../features/arsenal";
 import { UpgradeDialog, ExperienceBar } from "../features/progression";
 import { StatsPanel, ResultDialog, HistoryPanel } from "../features/results";
+import { HangarPanel } from "../features/hangar";
 import { formatTime } from "../shared/math";
 import { useAudio } from "./useAudio";
 export function App() {
-  const { game, input, start, toggle, choose, restart } = useGame();
+  const { game, profile, input, start, toggle, choose, restart, saveHangar, retryClaim } =
+    useGame();
   const d = game.current;
+  const p = profile.current;
   const [history, setHistory] = useState(false);
+  const [hangar, setHangar] = useState(false);
   const [help, setHelp] = useState(false);
   const { muted, setMuted } = useAudio(d);
   const openHistory = () => {
     if (d.phase === "playing") d.phase = "paused";
     setHistory(true);
+  };
+  const openHangar = () => {
+    if (d.phase === "playing") d.phase = "paused";
+    setHangar(true);
   };
   return (
     <div className="app-shell">
@@ -44,13 +54,20 @@ export function App() {
           <span className="nav-active">
             <Crosshair size={15} /> 生存行动
           </span>
+          <button onClick={openHangar}>
+            <Wrench size={15} /> 局外机库
+          </button>
           <button onClick={openHistory}>
             <History size={15} /> 行动档案
           </button>
         </nav>
         <div className="header-right">
+          <span className="materials-pill header-materials" title="可在局外机库消费的材料">
+            <Coins size={14} />
+            <b className="mono">{p.materials}</b> 材料
+          </span>
           <span className="status-dot" /> SYSTEM ONLINE{" "}
-          <span className="version">v.1.0</span>
+          <span className="version">v.2.0</span>
         </div>
       </header>
       <main>
@@ -167,8 +184,27 @@ export function App() {
                       <br />
                       武器将自动开火，你只需要活下去。
                     </p>
+                    <div className="locked-loadout">
+                      <span className="eyebrow">LOCKED LOADOUT · 出发配置</span>
+                      <div className="locked-loadout-row">
+                        <span>
+                          武器 ×{d.lockedLoadout.weapons.length}：
+                          {d.lockedLoadout.weapons.join(" / ")}
+                        </span>
+                        <span>
+                          改装 ×{d.lockedLoadout.modIds.length}：
+                          {d.lockedLoadout.modIds.length
+                            ? d.lockedLoadout.modIds.join(" / ")
+                            : "无"}
+                        </span>
+                      </div>
+                      <small>出发即锁定，战斗中无法换装；可在局外机库调整下一局配置</small>
+                    </div>
                     <button className="primary" onClick={start}>
                       开始行动 <ArrowUpRight size={17} />
+                    </button>
+                    <button className="outline start-hangar" onClick={openHangar}>
+                      <Wrench size={15} /> 先去机库调整
                     </button>
                     <small>W A S D 移动 · ESC 暂停</small>
                   </div>
@@ -190,7 +226,11 @@ export function App() {
                 <UpgradeDialog doc={d} choose={choose} />
               )}{" "}
               {d.phase === "ended" && (
-                <ResultDialog doc={d} restart={restart} />
+                <ResultDialog
+                  doc={d}
+                  restart={restart}
+                  retryClaim={retryClaim}
+                />
               )}
             </div>
             <ExperienceBar doc={d} />
@@ -232,6 +272,14 @@ export function App() {
       </main>
       {history && (
         <HistoryPanel records={d.records} close={() => setHistory(false)} />
+      )}{" "}
+      {hangar && (
+        <HangarPanel
+          profile={p}
+          doc={d}
+          onSave={saveHangar}
+          close={() => setHangar(false)}
+        />
       )}{" "}
       {help && (
         <div className="overlay help-overlay">

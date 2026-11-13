@@ -1,12 +1,16 @@
 import type { GameDoc } from "../../../shared/types";
 import { formatTime } from "../../../shared/math";
+import { AlertTriangle, Check, Coins, RefreshCw } from "lucide-react";
 export function ResultDialog({
   doc,
   restart,
+  retryClaim,
 }: {
   doc: GameDoc;
   restart: () => void;
+  retryClaim: () => void;
 }) {
+  const settlement = doc.settlement;
   return (
     <div className="overlay">
       <div className="result-dialog">
@@ -37,6 +41,32 @@ export function ResultDialog({
             </div>
           ))}
         </div>
+        {settlement && (
+          <div className="settlement-card">
+            <div className="settlement-line">
+              <span>
+                <Coins size={15} /> 行动材料结算
+              </span>
+              <strong className="mono">+{settlement.materials} ◈</strong>
+            </div>
+            <small className="settlement-formula">
+              {settlement.formula}
+            </small>
+            {doc.settlementClaimed ? (
+              <span className="settlement-status ok">
+                <Check size={13} /> 材料已写入本地档案
+              </span>
+            ) : (
+              <div className="settlement-status fail">
+                <AlertTriangle size={13} />
+                <span>{doc.settlementError ?? "材料尚未入账"}</span>
+                <button className="outline tiny-btn" onClick={retryClaim}>
+                  <RefreshCw size={12} /> 重试写入
+                </button>
+              </div>
+            )}
+          </div>
+        )}
         <button className="primary" onClick={restart}>
           重新接入 ↗
         </button>

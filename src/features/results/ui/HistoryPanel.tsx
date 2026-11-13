@@ -27,6 +27,9 @@ export function HistoryPanel({
                 <span>{formatTime(r.duration)}</span>
                 <span>波次 {r.wave}</span>
                 <span>{r.kills} 击杀</span>
+                <span className="materials-col">
+                  {typeof r.materials === "number" ? `+${r.materials} ◈` : "—"}
+                </span>
               </div>
             ))
         )}

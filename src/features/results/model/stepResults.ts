@@ -1,6 +1,6 @@
 import type { GameDoc, FrameEvents } from "../../../shared/types";
 import { applyEvents, makeRecord } from "./ledger";
-import { saveRecords } from "../lib/storage";
+import { computeSettlement } from "../../hangar";
 export function stepResults(doc: GameDoc, events: FrameEvents): void {
   if (doc.phase === "ended") return;
   applyEvents(doc, events);
@@ -9,6 +9,10 @@ export function stepResults(doc: GameDoc, events: FrameEvents): void {
   doc.phase = "ended";
   doc.choices = [];
   doc.notice = doc.victory ? "撤离成功 · 信号保全" : "信号中断 · 再次连接";
-  doc.records = [makeRecord(doc), ...doc.records].slice(0, 20);
-  saveRecords(doc.records);
+  const record = makeRecord(doc);
+  // 结算信息在结束瞬间定格；材料入账由档案层按 runId 幂等处理。
+  const settlement = computeSettlement(doc);
+  record.materials = settlement.materials;
+  doc.settlement = settlement;
+  doc.records = [record, ...doc.records].slice(0, 20);
 }

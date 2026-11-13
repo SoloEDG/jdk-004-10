@@ -1,6 +1,44 @@
 export type Vec = { x: number; y: number };
 export type Phase = "ready" | "playing" | "paused" | "upgrade" | "ended";
 export type WeaponId = "pulse" | "orbit" | "nova";
+export type ModId =
+  | "reinforced-frame"
+  | "stripped-frame"
+  | "overdrive-frame"
+  | "shield-core"
+  | "ammo-core"
+  | "cooling-core";
+export type ModMutexGroup = "frame" | "core";
+export interface HangarConfig {
+  weapons: WeaponId[];
+  modIds: ModId[];
+}
+export interface ModifierState {
+  damageMul: number;
+  maxHpMul: number;
+  speedMul: number;
+  armorFlat: number;
+  cooldownMul: number;
+}
+export interface SettlementInfo {
+  runId: string;
+  materials: number;
+  basis: { kills: number; wave: number; victory: boolean; duration: number };
+  formula: string;
+}
+export interface MigrationEntry {
+  at: number;
+  from: number;
+  reason: string;
+}
+export interface ProfileDoc {
+  version: 2;
+  materials: number;
+  hangar: HangarConfig;
+  records: RunRecord[];
+  claimedRuns: string[];
+  migrations: MigrationEntry[];
+}
 export interface Player extends Vec {
   hp: number;
   maxHp: number;
@@ -63,20 +101,24 @@ export interface RunRecord {
   damage: number;
   weapons: string[];
   victory: boolean;
+  materials?: number;
 }
 export interface GameDoc {
-  version: 1;
+  version: 2;
   seed: number;
   initialSeed: number;
   nextId: number;
   phase: Phase;
   time: number;
+  runId: string;
   player: Player;
   enemies: Enemy[];
   bullets: Bullet[];
   drops: Drop[];
   weapons: Weapon[];
   upgrades: Record<string, number>;
+  modifiers: ModifierState;
+  lockedLoadout: HangarConfig;
   choices: string[];
   xp: number;
   level: number;
@@ -86,6 +128,9 @@ export interface GameDoc {
   spawnBudget: number;
   stats: RunStats;
   records: RunRecord[];
+  settlement: SettlementInfo | null;
+  settlementClaimed: boolean;
+  settlementError: string | null;
   notice: string;
   victory: boolean;
 }

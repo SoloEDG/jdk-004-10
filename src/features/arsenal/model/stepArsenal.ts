@@ -6,14 +6,15 @@ export function stepArsenal(doc: GameDoc, input: Input, dt: number): number {
   const target = nearestTarget(doc),
     aim = input.firing ? input.aim : target || input.aim;
   const angle = Math.atan2(aim.y - doc.player.y, aim.x - doc.player.x);
-  const power = 1 + (doc.upgrades.power || 0) * 0.2,
+  const power =
+      (1 + (doc.upgrades.power || 0) * 0.2) * doc.modifiers.damageMul,
     haste = 1 + (doc.upgrades.haste || 0) * 0.13;
   for (const weapon of doc.weapons) {
     weapon.cooldown -= dt;
     if (weapon.cooldown > 0) continue;
     weapon.cooldown = Math.max(
       0.08,
-      WEAPON_CATALOG[weapon.id].interval /
+      (WEAPON_CATALOG[weapon.id].interval * doc.modifiers.cooldownMul) /
         haste /
         (1 + (weapon.level - 1) * 0.12),
     );
